@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from PyQt5.QtWidgets import QMainWindow, QLabel, QMessageBox, QDialog, QGridLayout
 import logic
 

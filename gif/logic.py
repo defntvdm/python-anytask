@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def it_is_gif(bytes):
     gif = ""
     for byte in bytes:

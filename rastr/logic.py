@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import math
 
 def draw_line(x1, y1, x2, y2, points, color, thick):

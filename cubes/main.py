@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Окно выбора количества цветов и размера поля, запуск"""
 
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QGridLayout, QApplication, QMessageBox # pylint: disable-msg=E0611

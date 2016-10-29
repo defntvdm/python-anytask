@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from PyQt5.QtGui import QPolygon
 
 class Country(QPolygon):

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import unittest
 from PyQt5.QtCore import QPoint
 import logic

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QPushButton, QLabel, QGridLayout
 from PyQt5.QtGui import QMovie
 from PyQt5.QtCore import QByteArray, Qt
