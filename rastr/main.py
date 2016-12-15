@@ -1,15 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Растровый редактор Николаев Вадим КБ-201
-Опции:
-1 - Перо
-2 - Линия
-3 - Прямоугольник
-4 - Эллипс
-5 - Заливка
-"""
-
 from PyQt5.QtWidgets import QApplication, QWidget, QColorDialog, QPushButton, QSlider, QLabel, QHBoxLayout, QVBoxLayout, QFileDialog
 from PyQt5.QtGui import QPainter, QColor, QPixmap
 from PyQt5.Qt import Qt, QRect
@@ -17,6 +7,13 @@ import sys
 import logic
 import copy
 from PIL import Image, ImageDraw
+from enum import Enum
+
+class Instruments(Enum):
+    pen = 1
+    line = 2
+    rect = 3
+    fill = 4
 
 
 class Button(QPushButton):
@@ -49,7 +46,7 @@ class Window(QWidget):
         h_layout.addStretch(1)
         v_layout = QVBoxLayout()
         v_layout.addStretch(1)
-        self.option = 1
+        self.option = Instruments.pen
         self.thickness = 1
         self.color = QColor(0, 0, 0)
         self.color_changer = QPushButton(self)
@@ -61,15 +58,13 @@ class Window(QWidget):
         self.thick_changer.setFixedSize(50, 10)
         self.thick_changer.valueChanged[int].connect(self.change_thickness)
         self.thick_lab = QLabel("W: 1", self)
-        pen = Button("Перо", 1, self)
+        pen = Button("Перо", Instruments.pen, self)
         pen.clicked[bool].connect(self.change_option)
-        line = Button("Линия", 2, self)
+        line = Button("Линия", Instruments.line, self)
         line.clicked[bool].connect(self.change_option)
-        rect = Button("Прямоугольник", 3, self)
+        rect = Button("Прямоугольник", Instruments.rect, self)
         rect.clicked[bool].connect(self.change_option)
-        ellipse = Button("Эллипс", 4, self)
-        ellipse.clicked[bool].connect(self.change_option)
-        fill = Button("Заливка", 5, self)
+        fill = Button("Заливка", Instruments.fill, self)
         fill.clicked[bool].connect(self.change_option)
         clean = QPushButton("Очистить", self)
         clean.clicked[bool].connect(self.clean)
@@ -84,7 +79,6 @@ class Window(QWidget):
         h_layout.addWidget(pen)
         h_layout.addWidget(line)
         h_layout.addWidget(rect)
-        h_layout.addWidget(ellipse)
         h_layout.addWidget(fill)
         h_layout.addWidget(clean)
         h_layout.addWidget(self.color_changer)
@@ -161,15 +155,12 @@ class Window(QWidget):
     def mousePressEvent(self, event):
         x = event.x()
         y = event.y()
-        if self.option == 1:
+        if self.option == Instruments.pen:
             logic.add_thickness_point(self.points, x, y, self.color, self.thickness)
-        elif self.option == 2:
+        elif self.option == Instruments.line:
             self.figure_x1 = x
             self.figure_y1 = y
-        elif self.option == 3:
-            self.figure_x1 = x
-            self.figure_y1 = y
-        elif self.option == 4:
+        elif self.option == Instruments.rect:
             self.figure_x1 = x
             self.figure_y1 = y
         else:
@@ -198,24 +189,20 @@ class Window(QWidget):
                 self.height = int(abs(self.top_y-max(y, self.last_y)))+self.thickness
         else:
             return
-        if self.option == 1:
+        if self.option == Instruments.pen:
                 logic.draw_line(x, y, self.last_x, self.last_y, self.points, self.color, self.thickness)
                 self.last_x = x
                 self.last_y = y
-        elif self.option == 2:
+        elif self.option == Instruments.line:
             self.preview.clear()
             logic.draw_line(x, y, self.figure_x1, self.figure_y1, self.preview, self.color, self.thickness)
-        elif self.option == 3:
+        elif self.option == Instruments.rect:
             self.preview.clear()
             logic.draw_rect(x, y, self.figure_x1, self.figure_y1, self.preview, self.color, self.thickness)
-        elif self.option == 4:
-            self.preview.clear()
-            logic.draw_ellipse(x, y, self.figure_x1, self.figure_y1, self.preview, self.color, self.thickness,\
-                               self.size_w, self.size_h)
         self.repaint(self.left_x, self.top_y, self.width, self.height)
 
     def mouseReleaseEvent(self, event):
-        if 1 < self.option < 5:
+        if self.option == Instruments.line or self.option == Instruments.rect:
             self.figure_x1 = 0
             self.figure_y1 = 0
             for point, color in self.preview.items():
